@@ -24,6 +24,8 @@ import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import cn.edu.pku.zhangqixun.R;
+import cn.edu.pku.zhangqixun.app.MyApplication;
 import cn.edu.pku.zhangqixun.bean.TodayWeather;
 import cn.edu.pku.zhangqixun.util.NetUtil;
 
@@ -109,7 +111,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         if(view.getId() == R.id.title_city_manager){
             Intent i = new Intent(this, SelectCity.class);
-            startActivity(i);
+            startActivityForResult(i,1);
         }
 
         if (view.getId() == R.id.title_update_btn) {
@@ -120,7 +122,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
 
             if (NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE) {
-                Log.d("myWeather", "网络OK");
+                Log.d("myWeather", "网络OK123");
                 queryWeatherCode(cityCode);
             } else {
                 Log.d("myWeather", "网络挂了");
@@ -128,6 +130,20 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
         }
     }
+
+    protected void onActivityResult(int requestCode,int resultCode,Intent intent){
+        MyApplication mApplication;
+        String code;
+        if(requestCode==1 && resultCode==RESULT_OK){
+            String cityname=intent.getStringExtra("cityName");
+            Log.d("cityname123", cityname);
+            mApplication=(MyApplication) getApplication();
+            code=mApplication.getCityCode(cityname);
+            queryWeatherCode(code);//这里应该按照选择的城市进行查询
+        }
+    }
+
+
 
     /**
      * @param cityCode
